@@ -3,13 +3,12 @@ pipeline {
 
     tools {
         maven "MAVEN"
-       
     }
 
     stages {
-        stage('Initialize'){
-            steps{
-                echo "PATH = ${M2_HOME}/bin:${PATH}"
+        stage('Initialize') {
+            steps {
+                echo "PATH = ${env.M2_HOME}/bin:${env.PATH}"
                 echo "M2_HOME = /opt/maven"
             }
         }
@@ -17,18 +16,17 @@ pipeline {
             steps {
                 sh 'mvn clean install'
                 dir("/var/lib/jenkins/workspace/New_demo/my-app/") {
-                sh 'mvn -B -DskipTests clean package'
+                    sh 'mvn -B -DskipTests clean package'
                 }
-            
             }
         }
-     }
+    }
     post {
-       always {
-          junit(
-        allowEmptyResults: true,
-        testResults: '*/test-reports/.xml'
-      )
-      }
-   } 
+        always {
+            junit(
+                allowEmptyResults: true,
+                testResults: '**/test-reports/*.xml'
+            )
+        }
+    }
 }
